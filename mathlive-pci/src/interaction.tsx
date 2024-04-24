@@ -2,6 +2,7 @@ import { useStore, IStore, Action } from "@citolab/preact-store";
 import { ActionType, StateModel } from "./store";
 import configProps from "./config.json";
 import { useState, useRef } from "preact/hooks";
+import { MathfieldElement } from "mathlive";
 
 declare module "preact" {
   namespace JSX {
@@ -14,9 +15,13 @@ declare module "preact" {
 type PropTypes = typeof configProps;
 
 const Interaction = ({ config, dom, store }: { config: PropTypes; dom: Document | ShadowRoot, store: IStore<StateModel> }) => {
-  const mf = useRef();
+  const mf = useRef<MathfieldElement>();
   const state = useStore(store);
   const [eventHandled, setEventHandled] = useState<boolean>(false);
+
+  dom.addEventListener("changed", (e: CustomEvent) => {
+    mf.current.setValue(e.detail);
+  })
   
   const handleInput = (e: Event) => {
     if (!eventHandled) {

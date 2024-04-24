@@ -38,6 +38,10 @@ class App implements IMSpci<PropTypes> {
       console.log(error);
     }
 
+    this.store.subscribe(() => {
+      dom.dispatchEvent(new CustomEvent("changed", { detail: this.getResponse() }));
+    })
+
     this.shadowdom = dom.attachShadow({ mode: "closed" });
     this.render();
 
@@ -66,6 +70,11 @@ class App implements IMSpci<PropTypes> {
         string: this.store.getState().input,
       },
     } as QtiVariableJSON;
+  }
+
+  setResponse = (response) => {
+    this.store.dispatch<{ input: string }>({ type: "SET_INPUT", payload: { input: response } });
+    this.shadowdom.dispatchEvent(new CustomEvent("changed", { detail: response }));
   }
 }
 
