@@ -6,8 +6,9 @@
   "types": "dist/types.d.ts",
   "private": true,
   "dependencies": {
-    "preact": "^10.13.2",
-    "@citolab/preact-store": "latest"
+    "@citolab/preact-store": "latest",
+    "mathlive": "^0.98.6",
+    "preact": "^10.13.2"
   },
   "devDependencies": {
     "@citolab/tspci": "latest"
