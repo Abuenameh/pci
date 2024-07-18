@@ -32,7 +32,7 @@ const Interaction = ({ config, dom, store }: { config: PropTypes; dom: Document 
                      onfocusin={() => { // @ts-ignore
                        window.mathVirtualKeyboard.layouts = config.layouts}}
                      onChange={handleChange}
-                     style={{width: config.width, height: config.height, display: config.display}}>
+                     style={{width: 'auto', height: 'auto', 'min-width': config.width, 'min-height': config.height, display: config.display}}>
     {state.input}
   </math-field>;
 };
