@@ -14,20 +14,19 @@ declare module "preact" {
 
 type PropTypes = typeof configProps;
 
-const Interaction = ({ config, dom, store }: { config: PropTypes; dom: Document | ShadowRoot, store: IStore<StateModel> }) => {
+const Interaction = ({ config, store, disabled, status }: { config: PropTypes; store: IStore<StateModel>, disabled: boolean, status: string }) => {
   const mf = useRef<MathfieldElement>();
   const state = useStore(store);
 
-  dom.addEventListener("changed", (e: CustomEvent) => {
-    mf.current.setValue(e.detail);
-  })
-  
   const handleChange = (e: Event) => {
       const input = e.target as HTMLInputElement;
       store.dispatch<{ input: string }>({ type: "SET_INPUT", payload: { input: input.value } });
   };
 
   return <math-field ref={mf}
+                     id={config.id}
+                     status={status}
+                     readonly={disabled}
                      math-virtual-keyboard-policy="auto"
                      onfocusin={() => { // @ts-ignore
                        window.mathVirtualKeyboard.layouts = config.layouts}}
