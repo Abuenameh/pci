@@ -1,15 +1,14 @@
-h1 {
-    color: red;
-}
-
 math-field[status="correct"] {
+    border-width: 2px;
     border-color: var(--success);
 }
 
 math-field[status="partially-correct"] {
+    border-width: 2px;
     border-color: var(--warn-soft);
 }
 
 math-field[status="wrong"] {
+    border-width: 2px;
     border-color: var(--warn);
 }

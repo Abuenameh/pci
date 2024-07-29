@@ -14,10 +14,15 @@ declare module "preact" {
 
 type PropTypes = typeof configProps;
 
-const Interaction = ({ config, store, disabled, status }: { config: PropTypes; store: IStore<StateModel>, disabled: boolean, status: string }) => {
+const Interaction = ({ config, dom, store, disabled, initialStatus }: { config: PropTypes; dom: Document | ShadowRoot | HTMLElement, store: IStore<StateModel>, disabled: boolean, initialStatus: string }) => {
   const mf = useRef<MathfieldElement>();
   const state = useStore(store);
+  const [status, setStatus] = useState(initialStatus);
 
+  dom.addEventListener("status", (e: CustomEvent) => {
+    setStatus(e.detail);
+  });
+  
   const handleChange = (e: Event) => {
       const input = e.target as HTMLInputElement;
       store.dispatch<{ input: string }>({ type: "SET_INPUT", payload: { input: input.value } });

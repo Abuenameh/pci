@@ -18,6 +18,7 @@ class App implements IMSpci<PropTypes> {
   store: IStore<StateModel>;
   disabled: boolean;
   status: string;
+  dom: HTMLElement;
 
   private logActions: { type: string; payload: unknown }[] = []; // optional logActions
   private initialState: StateModel = { input: undefined }; // optional initial state
@@ -43,6 +44,7 @@ class App implements IMSpci<PropTypes> {
     this.disabled = false;
     this.status = dom.getAttribute('status') || '';
 
+    this.dom = dom;
     this.shadowdom = dom.attachShadow({ mode: "open" });
     this.render();
 
@@ -54,7 +56,7 @@ class App implements IMSpci<PropTypes> {
     const css = document.createElement("style");
     css.innerHTML = style;
     this.shadowdom.appendChild(css);
-    render(<Interaction config={this.config.properties} store={this.store} disabled={this.disabled} status={this.status} />, this.shadowdom);
+    render(<Interaction config={this.config.properties} dom={this.dom} store={this.store} disabled={this.disabled} initialStatus={this.status} />, this.shadowdom);
   };
 
   getState = () =>
