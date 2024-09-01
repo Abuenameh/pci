@@ -16,8 +16,6 @@ class App implements IMSpci<PropTypes> {
   state: string; // keep a reference to the state
   shadowdom: ShadowRoot; // Not mandatory, but its wise to create a shadowroot
   store: IStore<StateModel>;
-  disabled: boolean;
-  status: string;
   dom: HTMLElement;
 
   private logActions: { type: string; payload: unknown }[] = []; // optional logActions
@@ -41,8 +39,12 @@ class App implements IMSpci<PropTypes> {
       console.log(error);
     }
 
-    this.disabled = false;
-    this.status = dom.getAttribute('status') || '';
+    dom.parentElement.addEventListener("setresponse", (e: CustomEvent) => {
+      const response = e.detail as QtiVariableJSON;
+      if (response.base && response.base.string) {
+        this.store.dispatch<{ input: string }>({ type: "SET_INPUT", payload: { input: response.base?.string as string } });
+      }
+    });
 
     this.dom = dom;
     this.shadowdom = dom.attachShadow({ mode: "open" });
@@ -56,7 +58,7 @@ class App implements IMSpci<PropTypes> {
     const css = document.createElement("style");
     css.innerHTML = style;
     this.shadowdom.appendChild(css);
-    render(<Interaction config={this.config.properties} dom={this.dom} store={this.store} disabled={this.disabled} initialStatus={this.status} />, this.shadowdom);
+    render(<Interaction config={this.config.properties} dom={this.dom} store={this.store} />, this.shadowdom);
   };
 
   getState = () =>
@@ -73,17 +75,6 @@ class App implements IMSpci<PropTypes> {
         string: this.store.getState().input,
       },
     } as QtiVariableJSON;
-  }
-
-  setResponse = (response: QtiVariableJSON) => {
-    if (response.base && response.base.string) {
-      this.store.dispatch<{ input: string }>({ type: "SET_INPUT", payload: { input: response.base?.string as string } });
-    }
-  }
-
-  setDisabled = (disabled: boolean) => {
-    this.disabled = disabled;
-    this.render();
   }
 }
 
